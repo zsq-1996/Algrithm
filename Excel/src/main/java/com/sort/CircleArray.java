@@ -1,34 +1,32 @@
-package com.order;
+package com.sort;
 
 /**
  * @Pragram:ArrayQueue
- * @Description:TODO 数组模拟队列，进行插入和取值
+ * @Description:TODO 数组模拟环形队列
  * @Author:ZhuShiQiang
  * @Create:2020-03-23 14:27
  **/
-public class ArrayQueue {
+public class CircleArray {
     public static void main(String[] args) {
 
     }
 
     private int maxSize;
-    //队列头
+    //队列头,a[front]是队列的第一个元素,初始值为0
     private int front;
-    //队列尾
+    //队列尾,指向队尾的后一个位置,初始值为0
     private int rear;
     //用于操作队列
     private int []arr;
 
-    public ArrayQueue(int maxSize){
+    public CircleArray(int maxSize){
         this.maxSize = maxSize;
         arr = new int[maxSize];
-        front = -1;//指向队列第一个位置,a[front]不是队列的第一个元素
-        rear = -1;//指向队列尾部，包含最后一个元素
     }
 
-    //判断队列是否处于已满状态
+    //判断队列是否处于已满状态,需要考虑取模（正整数取模和取余结果一样）
     public boolean isFull(){
-        return rear == maxSize - 1;
+        return (rear + 1) % maxSize == front;
     }
 
     //判断队列是否为空
@@ -51,16 +49,24 @@ public class ArrayQueue {
         if (isEmpty()){
             throw new RuntimeException("队列为空，不能取数据");
         }
-        front ++;//front后移
-        return arr[front];
+        int value = arr[front];
+        front = (front + 1) % maxSize;//front后移,需要考虑取模
+        return value;
     }
+
+    //求出当前队列里的有效数据个数
+    public int size(){
+        //rear记录了插入数据，front记录了取数据
+        return (rear + maxSize - front) % maxSize ;
+    }
+
     //显示数据
     public void showQueue(){
         if (isEmpty()){
             throw new RuntimeException("队列为空");
         }
-        for (int i = 0; i < arr.length; i ++){
-            System.out.println(arr[i]);
+        for (int i = front; i < front + size(); i ++){
+            System.out.printf("arr[d%]=d%\n",i % maxSize,arr[i % maxSize]);
         }
     }
 }
